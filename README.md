@@ -46,7 +46,7 @@ mongosh
 show dbs 
 ```
 Find the VM's IP Address:
-You can determine the IP address by running vagrant ssh and then using commands like ip addr
+You can determine the IP address by running vagrant ssh and then using commands like ```ip addr```
 ![MongoDB](img/3.png)
 ### 1.4 Configure the MongoDB connection
 ```
