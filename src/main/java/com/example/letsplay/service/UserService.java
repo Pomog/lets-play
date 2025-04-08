@@ -2,6 +2,7 @@ package com.example.letsplay.service;
 
 import com.example.letsplay.dto.LoginRequest;
 import com.example.letsplay.dto.RegisterRequest;
+import com.example.letsplay.exception.InvalidCredentialsException;
 import com.example.letsplay.model.User;
 import com.example.letsplay.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,7 +60,7 @@ public class UserService implements UserDetailsService {
                     .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
             return jwtUtil.generateTokenFromUsername(username, roles);
         } catch (Exception e) {
-            throw new RuntimeException("Invalid credentials");
+            throw new InvalidCredentialsException("Invalid credentials");
         }
     }
     

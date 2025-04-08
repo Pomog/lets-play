@@ -1,5 +1,6 @@
 package com.example.letsplay.controller;
 
+import com.example.letsplay.dto.LoginRequest;
 import com.example.letsplay.dto.RegisterRequest;
 import com.example.letsplay.model.User;
 import com.example.letsplay.service.UserService;
@@ -21,6 +22,12 @@ public class AuthController {
     public ResponseEntity<User> registerUser(@Valid @RequestBody RegisterRequest request) {
         User created = userService.registerUser(request);
         return ResponseEntity.status(201).body(created);
+    }
+    
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
+        String token = userService.login(request);
+        return ResponseEntity.ok(token);
     }
 
 }
