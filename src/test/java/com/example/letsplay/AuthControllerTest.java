@@ -15,8 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Set;
 
@@ -58,5 +57,32 @@ public class AuthControllerTest {
                         .content(json))
                 .andExpect(status().isBadRequest());
     }
+    
+    @Test
+    void testLogin_success() throws Exception {
+        String json = "{ \"email\":\"john@example.com\", \"password\":\"secret123\" }";
+        String token = "fake-jwt-token";
+        when(userService.login(any())).thenReturn(token);
+        
+        mockMvc.perform(post("/api/auth/login")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().string(token));  // response body is the token
+    }
+    
+    @Test
+    void testLogin_invalidCredentials() throws Exception {
+        String json = "{ \"email\":\"john@example.com\", \"password\":\"wrong\" }";
+        when(userService.login(any())).thenThrow(new RuntimeException("Invalid credentials"));
+        
+        mockMvc.perform(post("/api/auth/login")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isUnauthorized());
+    }
+    
     
 }
