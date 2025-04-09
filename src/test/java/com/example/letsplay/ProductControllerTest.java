@@ -4,9 +4,12 @@ package com.example.letsplay;
 import com.example.letsplay.controller.ProductController;
 import com.example.letsplay.exception.ResourceNotFoundException;
 import com.example.letsplay.model.Product;
+import com.example.letsplay.service.JwtUtil;
 import com.example.letsplay.service.ProductService;
+import com.example.letsplay.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -29,6 +32,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 
 @WithMockUser
+@AutoConfigureMockMvc(addFilters=false)
 @WebMvcTest(ProductController.class)
 public class ProductControllerTest {
     @Autowired
@@ -36,6 +40,12 @@ public class ProductControllerTest {
     
     @MockitoBean
     private ProductService productService;
+    
+    @MockitoBean
+    private JwtUtil jwtUtil;
+    
+    @MockitoBean(name = "userService")
+    UserService userService;
     
     
     @Test

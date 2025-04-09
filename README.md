@@ -58,4 +58,61 @@ spring.data.mongodb.uri=mongodb://192.168.56.82:27017/lets-play
 ```
 Replace <HOST> with the IP address or hostname of your MongoDB server and <DATABASE> with your database name
 
-## 2 
+## Running the Application and Testing with Postman
+```
+vagrant up --provision
+mvn spring-boot:run
+```
+
+- Register a new user:
+```PostMan
+{
+  "name": "Test User",
+  "email": "testuser@example.com",
+  "password": "testpass"
+}
+```
+- Login as ADMIN
+```
+POST http://localhost:8080/api/auth/login
+  {
+  "email": "admin@example.com",
+  "password": "admin123"
+  }
+```
+
+- Login with the new user
+```PostMan
+POST http://localhost:8080/api/auth/login
+{
+  "email": "testuser@example.com",
+  "password": "testpass"
+}
+```
+
+- Create a product with authentication
+```powershell
+To successfully create a product, we need an ADMIN user token. If you used the CommandLineRunner, an admin user admin@example.com with password admin123 exists. Use that: Login as admin: POST /api/auth/login with admin creds to get token.
+Then use that token in Authorization header and POST product.
+Expected: 201 Created, and returned JSON of product with an id. Now the product exists in DB.
+```
+```
+POST http://localhost:8080/api/products
+Headers:
+Authorization  Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwiaWF0IjoxNzQ0MjI1MTUyLCJleHAiOjE3NDQyMjg3NTJ9.-Xz1qApsb44CnCld9nFPkJKrC2Yu3TU902iJL6hj3AQ
+{
+    "name": "New Product",
+    "description": "This is a great product.",
+    "price": 19.99,
+    "id": "67f6c4684f80a9283a42dbdd"
+}
+```
+- Access public product list
+```web
+http://localhost:8080/api/products
+```
+
+- Get product by id
+```powershell
+http://localhost:8080/api/products/<id>
+```
